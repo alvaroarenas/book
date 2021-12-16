@@ -1,0 +1,530 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The Rust on ESP Book</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="A comprehensive guide on using the Rust programming language with Espressif SoCs and modules">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="overview.html"><strong aria-hidden="true">2.</strong> Ecosystem Overview</a></li><li class="chapter-item expanded "><a href="getting-started/index.html"><strong aria-hidden="true">3.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="getting-started/installing-rust.html"><strong aria-hidden="true">3.1.</strong> Installing Rust</a></li><li class="chapter-item expanded "><a href="getting-started/creating-applications.html"><strong aria-hidden="true">3.2.</strong> Creating Applications</a></li></ol></li><li class="chapter-item expanded "><a href="tooling/index.html"><strong aria-hidden="true">4.</strong> Tooling</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tooling/text-editors-and-ides.html"><strong aria-hidden="true">4.1.</strong> Text Editors and IDEs</a></li><li class="chapter-item expanded "><a href="tooling/espflash.html"><strong aria-hidden="true">4.2.</strong> espflash</a></li><li class="chapter-item expanded "><a href="tooling/espmonitor.html"><strong aria-hidden="true">4.3.</strong> espmonitor</a></li><li class="chapter-item expanded "><a href="tooling/debugging/index.html"><strong aria-hidden="true">4.4.</strong> Debugging</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tooling/debugging/probe-rs.html"><strong aria-hidden="true">4.4.1.</strong> probe-rs</a></li><li class="chapter-item expanded "><a href="tooling/debugging/openocd.html"><strong aria-hidden="true">4.4.2.</strong> OpenOCD</a></li><li class="spacer"></li></ol></li></ol></li><li class="chapter-item expanded "><a href="misc/glossary.html">Appendix A: Glossary</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Rust on ESP Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>The goal of this book is to provide a comprehensive guide on using the <a href="https://www.rust-lang.org/">Rust programming language</a> with <a href="https://espressif.com/">Espressif</a> SoCs and modules.</p>
+<p>Rust support for these devices is still in the early stages, but progress is being made rapidly. Because of this parts of this documentation may be out of date or change dramatically between readings.</p>
+<p>For tools and libraries relating to Rust on ESP, please see the <a href="https://github.com/esp-rs/">esp-rs organization</a> on GitHub.</p>
+<h2 id="status-of-this-book"><a class="header" href="#status-of-this-book">Status of This Book</a></h2>
+<p>This book is currently a work in progress. A number of sections may be missing information or be missing altogether. If there is a specific topic you would like to see documented please <a href="https://github.com/esp-rs/book/issues/new">open an issue</a>.</p>
+<p>If you feel you can contribute something to this book, we encourage you to <a href="https://github.com/esp-rs/book/pulls">create a pull request</a>!</p>
+<h2 id="who-this-book-is-for"><a class="header" href="#who-this-book-is-for">Who This Book is For</a></h2>
+<p>This book assumes some experience with embedded development and the Rust programming language. Teaching these topics is outside the scope of this book.</p>
+<p>If you are unfamiliar with either topic, please refer to the resources listed below to help you get started.</p>
+<h2 id="additional-resources"><a class="header" href="#additional-resources">Additional Resources</a></h2>
+<p>Some additional resources can be found below which may prove useful for those less experienced with embedded Rust.</p>
+<table><thead><tr><th>Resource</th><th>Description</th></tr></thead><tbody>
+<tr><td><a href="https://doc.rust-lang.org/book/">The Rust Programming Language</a></td><td>If you are not familiar with Rust we recommend reading this book first.</td></tr>
+<tr><td><a href="https://docs.rust-embedded.org/book/index.html">The Embedded Rust Book</a></td><td>Here you can find several other resources provided by Rust's Embedded Working Group.</td></tr>
+<tr><td><a href="https://docs.rust-embedded.org/embedonomicon/">The Embedonomicon</a></td><td>The nitty gritty details when doing embedded programming in Rust.</td></tr>
+</tbody></table>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ecosystem-overview"><a class="header" href="#ecosystem-overview">Ecosystem Overview</a></h1>
+<p>As it stands there are two approaches for using Rust on Espressif chips, <code>std</code> and <code>no_std</code>. Both approaches have their advantages and disadvantages, so you should choose one based on your project's needs. Below is an overview of the two approaches followed by a brief comparison between them.</p>
+<p>The <a href="https://github.com/esp-rs/">esp-rs organization</a> on GitHub is home to a number of repositories related to running Rust on Espressif chips. Most of the required crates have their source code hosted here.</p>
+<h2 id="using-the-rust-standard-library-std"><a class="header" href="#using-the-rust-standard-library-std">Using the Rust Standard Library (<code>std</code>)</a></h2>
+<p>Espressif provides a C-based development framework called <a href="https://github.com/espressif/esp-idf"><code>esp-idf</code></a> which has support for Espressif chips from the ESP32 and later. <code>esp-idf</code> provides a <a href="https://sourceware.org/newlib/">newlib</a> environment with enough functionality to build the Rust standard library (<code>std</code>) on top of it, hence this approach. The supported <code>std</code> features are as follows:</p>
+<ul>
+<li>Threads</li>
+<li>Mutexes and other synchronization primitives</li>
+<li>Collections</li>
+<li>Random number generation</li>
+<li>Sockets</li>
+</ul>
+<p>On top of <code>std</code> features, there is a <a href="https://github.com/esp-rs/embedded-svc">embedded-svc</a> implementation for <code>esp-idf</code> which adds extra support for services/modules not available in the standard library, including:</p>
+<ul>
+<li>Wi-Fi management</li>
+<li>NVS (non-volatile storage)</li>
+<li>Networking services like <code>httpd</code> and <code>ping</code></li>
+</ul>
+<p>In general, this approach should feel quite similar to developing for most normal PC environments.</p>
+<h3 id="chip-support"><a class="header" href="#chip-support">Chip Support</a></h3>
+<p>Chip support for <code>std</code> requires two things, LLVM/Clang support and support in <code>esp-idf</code>. Refer to the table below to see if your chip is supported.</p>
+<table><thead><tr><th align="center">Chip</th><th align="center">Supported?</th></tr></thead><tbody>
+<tr><td align="center">ESP32</td><td align="center">✅</td></tr>
+<tr><td align="center">ESP32-C3</td><td align="center">✅</td></tr>
+<tr><td align="center">ESP32-S2</td><td align="center">✅</td></tr>
+<tr><td align="center">ESP32-S3</td><td align="center">✅</td></tr>
+<tr><td align="center">ESP32-H2</td><td align="center">planned</td></tr>
+<tr><td align="center">ESP8266</td><td align="center">❌</td></tr>
+</tbody></table>
+<h3 id="relevant-esp-rs-crates"><a class="header" href="#relevant-esp-rs-crates">Relevant <code>esp-rs</code> crates</a></h3>
+<table><thead><tr><th>Repository</th><th>Description</th></tr></thead><tbody>
+<tr><td><a href="https://github.com/esp-rs/embedded-svc">esp-rs/embedded-svc</a></td><td>Abstraction traits for embedded services.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp-idf-svc">esp-rs/esp-idf-svc</a></td><td>An implementation of <a href="https://github.com/esp-rs/embedded-svc">embedded-svc</a> using <code>esp-idf</code> drivers.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp-idf-sys">esp-rs/esp-idf-sys</a></td><td>Rust bindings to the <code>esp-idf</code> development framework. Gives raw (<code>unsafe</code>) access to drivers, Wi-Fi and more.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp-idf-hal">esp-rs/esp-idf-hal</a></td><td>An implementation of the <code>embedded-hal</code> traits using the <code>esp-idf</code> framework.</td></tr>
+</tbody></table>
+<h2 id="bare-metal-no_std"><a class="header" href="#bare-metal-no_std">Bare Metal (<code>no_std</code>)</a></h2>
+<p>Using <code>no_std</code> may be more familiar to embedded Rust developers. It does not use <code>std</code> (the Rust standard library) but instead uses a subset, the <code>core</code> library. The <a href="https://docs.rust-embedded.org/">official Rust embedded book</a> has a <a href="https://docs.rust-embedded.org/book/intro/no-std.html">great section on this</a>.</p>
+<p>It's important to note that in general a <code>no_std</code> crate can always compile in <code>std</code> environment but the inverse is not true, therefore when creating crates it's worth keeping in mind if it needs to the standard library to function.</p>
+<p>The main focus of the <code>no_std</code> ESP support has been around the ESP32 and to a lesser extent the ESP8266. As <a href="https://github.com/espressif/svd">SVDs are released</a> it will be possible to create hardware abstraction layers (HAL) for newer chips.</p>
+<p>While <code>esp32-hal</code> has great support for a lot of the onboard peripherals, Wi-Fi and Bluetooth are <strong>not</strong> currently supported in a <code>no_std</code> enviroment. <a href="https://github.com/esp-rs/esp32-wifi">esp-wifi</a> was created to explore getting it working, but it is not yet functional.</p>
+<h3 id="chip-support-1"><a class="header" href="#chip-support-1">Chip Support</a></h3>
+<p>Chip support for <code>no_std</code> requires LLVM/Clang support just like for <code>std</code>. However, this has no dependency on <code>esp-idf</code>. In addition to compiler support, it's necessary to have peripheral access crates (PAC) and hardware abstraction layers (HAL) for your desired chip.</p>
+<p>Refer to the table below to see if your chip is supported.</p>
+<table><thead><tr><th align="center">Chip</th><th align="center">PAC</th><th align="center">HAL</th></tr></thead><tbody>
+<tr><td align="center">ESP32</td><td align="center">✅</td><td align="center">✅</td></tr>
+<tr><td align="center">ESP32-C3</td><td align="center">✅</td><td align="center">planned</td></tr>
+<tr><td align="center">ESP32-S2</td><td align="center">⚠️</td><td align="center">planned</td></tr>
+<tr><td align="center">ESP32-S3</td><td align="center">⚠️</td><td align="center">planned</td></tr>
+<tr><td align="center">ESP32-H2</td><td align="center">planned</td><td align="center">planned</td></tr>
+<tr><td align="center">ESP8266</td><td align="center">✅</td><td align="center">✅</td></tr>
+</tbody></table>
+<p><strong>Note:</strong> <em>items marked with ⚠️ have repositories, but have not yet been published to <a href="https://crates.io/">crates.io</a>.</em></p>
+<h3 id="relevant-esp-rs-crates-1"><a class="header" href="#relevant-esp-rs-crates-1">Relevant <code>esp-rs</code> Crates</a></h3>
+<table><thead><tr><th>Repository</th><th>Description</th></tr></thead><tbody>
+<tr><td><a href="https://github.com/esp-rs/esp32-hal">esp-rs/esp32-hal</a></td><td>An implementation of the <code>embedded-hal</code> traits and more for the ESP32.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp32">esp-rs/esp32</a></td><td>A PAC crate for the ESP32.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp32c3">esp-rs/esp32c3</a></td><td>A PAC crate for the ESP32-C3.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp32s2">esp-rs/esp32s2</a></td><td>A PAC crate for the ESP32-S2.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp32s3">esp-rs/esp32s3</a></td><td>A PAC crate for the ESP32-S3.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp8266-hal">esp-rs/esp8266-hal</a></td><td>An implementation of the <code>embedded-hal</code> traits and more for the ESP8266.</td></tr>
+<tr><td><a href="https://github.com/esp-rs/esp8266">esp-rs/esp8266</a></td><td>A PAC crate for the ESP8266.</td></tr>
+</tbody></table>
+<h2 id="comparing-std-and-no_std"><a class="header" href="#comparing-std-and-no_std">Comparing <code>std</code> and <code>no_std</code></a></h2>
+<p>There are a number of factors which must be considered when choosing between the two possible approaches. As stated earlier, each approach has its own unique set of advantages and disadvantages. While we can't decide for you, this section will hopefully allow you to make an educated decision.</p>
+<p>At present, there are unfortunately certain technical restrictions which may dictate your choice; we hope to have these issues resolved soon. Currently you <em>must</em> use the <code>std</code> approach if you require any of the following:</p>
+<ul>
+<li>Use of Wi-Fi or Bluetooth</li>
+<li>The ability to target any chip other than the ESP32 or the ESP8266</li>
+</ul>
+<h3 id="application-runtimes"><a class="header" href="#application-runtimes">Application Runtimes</a></h3>
+<p>In the case of applications (as opposed to libraries) the standard library provides a runtime which handles setting up stack overflow protection, spawning the main thread before an application's <code>main</code> function is invoked, and handling of command-line arguments.</p>
+<p>Applications targeting <code>no_std</code> will be responsible for initializing their own runtimes instead. Runtime initialization is generally handled by an external dependency, in our case the <a href="https://github.com/rust-embedded/riscv-rt">riscv-rt</a> and <a href="https://github.com/esp-rs/xtensa-lx-rt">xtensa-lx-rt</a> libraries. You can refer to their READMEs and documentation for more information.</p>
+<p>One advantage of not including the default runtime is that you're able to write applications at a lower level. This is possible because the applications will have been linked again the <code>core</code> crate instead of <code>std</code>, which makes no assumptions about the system it is running on. As such, it's possible to write applications like bootloaders, firmware, or even operating system kernels using the <code>no_std</code> approach.</p>
+<h3 id="no_main"><a class="header" href="#no_main"><code>#![no_main]</code></a></h3>
+<p>Another interesting property of <code>no_std</code> applications is that we cannot use Rust's default <code>main</code> function as our entry point. It makes certain assumptions which are not neccessarily valid in an embedded context (for example, it expects that command-line arguments exist).</p>
+<p>Because of this, you will often see the <code>#![no_main]</code> attribute used to instruct the Rust compiler not to use the default entry point. Runtime crates will provide an <code>#[entry]</code> attribute which can be used to mark a diverging function as the application's entry point instead. For example a minimal application might look something like this:</p>
+<pre><code class="language-rust ignore">#![no_std]
+#![no_main]
+
+use riscv_rt::entry;
+
+#[entry]
+fn main() -&gt; ! {
+    loop {}
+}
+</code></pre>
+<h3 id="panic-handlers"><a class="header" href="#panic-handlers">Panic Handlers</a></h3>
+<p>In addition to specifying the application's entry point, for <code>no_std</code> we must also define a panic handler. The default panic behaviour relies on <code>std</code>, as it prints to standard output.</p>
+<p>You are able to define a panic handler manually using the <code>#[panic_handler]</code> attribute. Note that this function's signature <em>must</em> match the one below.</p>
+<pre><code class="language-rust ignore">#![no_std]
+
+use core::panic::PanicInfo;
+
+#[panic_handler]
+fn panic(info: &amp;PanicInfo) -&gt; ! {
+    // Your implementation goes here!
+}
+</code></pre>
+<p>Alternatively, there are a number of external dependencies which define various panic handlers for us. Some possible choices are <a href="https://github.com/korken89/panic-halt">panic-halt</a>, <a href="https://github.com/rust-embedded/cortex-m/tree/master/panic-semihosting">panic-semihosting</a>, or <a href="https://github.com/japaric/panic-never">panic-never</a>.</p>
+<p>These can be used simply by importing the relevant crate:</p>
+<pre><code class="language-rust ignore">#![no_std]
+
+use panic_halt as _;
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="getting-started"><a class="header" href="#getting-started">Getting Started</a></h1>
+<p>With an understanding of the ecosystem surrounding Rust on Espressif chips, we're able to move on to actual development. If you are not aware of the two possible development approaches, or do not understand the differences between writing <code>std</code> and <code>no_std</code> applications, please first read the <a href="getting-started/../overview.html">Ecosystem Overview</a> chapter.</p>
+<p>In this chapter we will cover the installation of the correct Rust compiler and toolchain as well as creating applications.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="installing-rust"><a class="header" href="#installing-rust">Installing Rust</a></h1>
+<p>In order to develop for ESP devices using Rust you must first install the Rust compiler along with the appropriate toolchain and target(s). Depending on your device it may be one of two architectures, each requiring different setup.</p>
+<p>If you have not yet installed Rust on your system, you can do so easily using <a href="https://rustup.rs/">rustup</a>. For <em>macOS</em> and <em>Linux</em> it can be installed by runing the following command:</p>
+<pre><code class="language-bash">$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+</code></pre>
+<p>For installation on Windows or alternative installation methods, please refer to the instructions on the <a href="https://rustup.rs/">rustup</a> website.</p>
+<p>With Rust installed we next need to ensure that the <code>nightly</code> toolchain is installed and set as the default:</p>
+<pre><code class="language-bash">$ rustup toolchain install nightly
+$ rustup default nightly
+</code></pre>
+<p>You can read more about toolchains in the <a href="https://rust-lang.github.io/rustup/concepts/toolchains.html">rustup book</a>.</p>
+<h2 id="risc-v-esp32-c3"><a class="header" href="#risc-v-esp32-c3">RISC-V (ESP32-C3)</a></h2>
+<p>The <code>RISC-V</code> architecture has support in the mainline Rust compiler so setup is relatively simple, all we must do is add the appropriate compilation target.</p>
+<p>There are two suitable targets for this chip:</p>
+<ul>
+<li>For bare-metal (<code>no_std</code>) applications, use <code>riscv32imc-unknown-none-elf</code></li>
+<li>For applications which require <code>std</code>, use <code>riscv32imc-esp-espidf</code></li>
+</ul>
+<p>The bare-metal target can be installed by running:</p>
+<pre><code class="language-bash">$ rustup target add riscv32imc-unknown-none-elf
+</code></pre>
+<p>The standard library target (<code>riscv32imc-esp-espidf</code>) is currently Tier 3, and does not have prebuilt objects distributed through <code>rustup</code>, therefore the <code>-Z build-std</code> unstable cargo feature is required within your project. See an example usage in <a href="https://github.com/ivmarkov/rust-esp32-std-mini/blob/5fe3a5d75b16c6cee63e4c36b87f936744151494/.cargo/config.toml#L25-L26">rust-esp32-std-mini</a>.</p>
+<p>At this point you are ready to build applications for the ESP32-C3.</p>
+<h2 id="xtensa-esp32-esp32-s2"><a class="header" href="#xtensa-esp32-esp32-s2">Xtensa (ESP32, ESP32-S2)</a></h2>
+<p>Because there is no <code>Xtensa</code> support in the mainline Rust compiler you must use the <a href="https://github.com/esp-rs/rust">esp-rs/rust</a> fork instead. There are a few options available for installing this compiler fork.</p>
+<h3 id="using-a-pre-built-release"><a class="header" href="#using-a-pre-built-release">Using a Pre-Built Release</a></h3>
+<p>Pre-built releases are available for a number of platforms on GitHub under the <a href="https://github.com/esp-rs/rust-build">esp-rs/rust-build</a> repository. The following operating systems and architectures are currently supported:</p>
+<ul>
+<li>macOS (<code>x86_64</code>, <code>aarch64</code>)</li>
+<li>Windows (<code>x86_64</code>)</li>
+<li>Linux (<code>x86_64</code>)</li>
+</ul>
+<p>The aforementioned repository also contains Bash and PowerShell scripts to automate the installation process.</p>
+<h4 id="macos-and-linux"><a class="header" href="#macos-and-linux">macOS and Linux</a></h4>
+<pre><code class="language-bash">$ curl -LO https://raw.githubusercontent.com/esp-rs/rust-build/main/install-rust-toolchain.sh
+$ chmod +x install-rust-toolchain.sh
+$ ./install-rust-toolchain.sh
+</code></pre>
+<h4 id="windows"><a class="header" href="#windows">Windows</a></h4>
+<p>With GUI installer: <a href="https://github.com/espressif/idf-installer/releases">https://github.com/espressif/idf-installer/releases</a></p>
+<p>With PowerShell:</p>
+<pre><code class="language-powershell">PS&gt; Invoke-WebRequest https://raw.githubusercontent.com/esp-rs/rust-build/main/Install-RustToolchain.ps1 -OutFile Install-RustToolchain.ps1
+PS&gt; ./Install-RustToolchain.ps1
+</code></pre>
+<p>To confirm the <code>esp</code> toolchain has been installed:</p>
+<pre><code class="language-bash">$ rustup toolchain list
+stable-x86_64-apple-darwin
+nightly-x86_64-apple-darwin (default)
+esp
+</code></pre>
+<h3 id="building-from-source"><a class="header" href="#building-from-source">Building From Source</a></h3>
+<p>You can also build the Rust compiler with <code>Xtensa</code> support from source. This process is computationally expensive and can take one or more hours to complete depending on your system. It is recommended that you have <em>at least</em> 6GB of RAM and 25GB+ of available storage space.</p>
+<p>To check out the repository and build the compiler:</p>
+<pre><code class="language-bash">$ git clone -b esp https://github.com/esp-rs/rust
+$ cd rust
+$ ./configure --experimental-targets=Xtensa
+$ ./x.py build --stage 2
+</code></pre>
+<p>Note that you should <em>not</em> rename the <code>rust</code> directory to avoid issues while building.</p>
+<p>Once the build has completed, you can link the toolchain using rustup (your architecture/operating system may be different):</p>
+<pre><code class="language-bash">$ rustup toolchain link esp $PWD/build/x86_64-apple-darwin/stage2
+</code></pre>
+<p>Once the compiler fork has been installed using one of the above methods, to confirm the <code>esp</code> toolchain has been installed:</p>
+<pre><code class="language-bash">$ rustup toolchain list
+stable-x86_64-apple-darwin
+nightly-x86_64-apple-darwin (default)
+esp
+</code></pre>
+<p>To view the installed <code>Xtensa</code> targets:</p>
+<pre><code class="language-bash">$ rustc +esp --print target-list | grep xtensa
+xtensa-esp32-espidf
+xtensa-esp32-none-elf
+xtensa-esp32s2-espidf
+xtensa-esp32s2-none-elf
+xtensa-esp8266-none-elf
+xtensa-none-elf
+</code></pre>
+<h3 id="using-containers"><a class="header" href="#using-containers">Using Containers</a></h3>
+<p>As an alternative to installing the compiler fork to your local system directly, it's also possible to run it inside of a container.</p>
+<p>A number of container runtimes are available, and which should be used depends on your operating system. Some of the popular options are:</p>
+<ul>
+<li><a href="https://www.docker.com/">Docker</a> (non-commerial use only without a license)</li>
+<li><a href="https://podman.io/">Podman</a></li>
+<li><a href="https://github.com/lima-vm/lima">Lima</a></li>
+</ul>
+<p>Espressif provides the <a href="https://hub.docker.com/r/espressif/idf-rust">idf-rust</a> container image which contains <a href="https://github.com/espressif/esp-idf">esp-idf</a> and the pre-built Rust compiler fork.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="creating-applications"><a class="header" href="#creating-applications">Creating Applications</a></h1>
+<p>With the appropriate Rust compiler and toolchain installed, you're now ready to create an application. As outlined below, there are essentially two ways to do this: generating from a template or starting from scratch using only <code>cargo</code>.</p>
+<h2 id="using-cargo-generate"><a class="header" href="#using-cargo-generate">Using <code>cargo-generate</code></a></h2>
+<p>The <a href="https://github.com/cargo-generate/cargo-generate">cargo-generate</a> subcommand allows you to create a new project based on some existing template. In our case <a href="https://github.com/esp-rs/esp-idf-template">esp-idf-template</a> can be used to generate an application with all the required configuration and dependencies.</p>
+<p><code>cargo generate</code> can be installed by running:</p>
+<pre><code class="language-shell">$ cargo install cargo-generate
+</code></pre>
+<p>When the <code>cargo generate</code> subcommand is invoked, you will be prompted to answer a number of questions regarding the target of your application. Upon completion of this process you will have a buildable project with all the correct configuration. The process will look something like below when complete:</p>
+<pre><code class="language-shell">$ cargo generate --git https://github.com/esp-rs/esp-idf-template cargo
+🤷   Project Name : esp-rust-app
+🔧   Generating template ...
+✔ 🤷   Rust toolchain (beware: nightly works only for esp32c3!) · esp
+✔ 🤷   STD support · true
+✔ 🤷   ESP-IDF native build version (stable = 4.3.1, upcoming = 4.4, master = 5.0; applicable only with `cargo build --features native`) · stable
+✔ 🤷   MCU · esp32
+[1/9]   Done: .cargo/config.toml
+[2/9]   Done: .cargo
+[3/9]   Done: .gitignore
+[4/9]   Done: Cargo.toml
+[5/9]   Done: build.rs
+[6/9]   Done: rust-toolchain.toml
+[7/9]   Done: sdkconfig.defaults
+[8/9]   Done: src/main.rs
+[9/9]   Done: src
+🔧   Moving generated files into: `/Users/alice/esp-rust-app`...
+✨   Done! New project created /Users/alice/esp-rust-app
+</code></pre>
+<p>The generated application can be built as normal using the appropriate toolchain and target simply by running <code>cargo build</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tooling"><a class="header" href="#tooling">Tooling</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="text-editors-and-ides"><a class="header" href="#text-editors-and-ides">Text Editors and IDEs</a></h1>
+<p>While an often contentious subject, using the right development environment can make a significant impact on your productivity with a given programming language. Below can be found a curated list of what we feel are the best options.</p>
+<h2 id="visual-studio-code"><a class="header" href="#visual-studio-code">Visual Studio Code</a></h2>
+<p>One of the more common development environents is Microsoft's <a href="https://code.visualstudio.com/">Visual Studio Code</a> text editor along with the <a href="https://rust-analyzer.github.io/">Rust Analyzer</a> extension.</p>
+<p>Visual Studio Code is an open-source and cross-platform graphical text editor with a rich ecosystem of extensions. The Rust Analyzer extension provides an implementation of the <a href="https://microsoft.github.io/language-server-protocol/">Language Server Protocol</a> for Rust, and additionally includes features like autocompletion, go to definition, and more.</p>
+<p>Visual Studio Code can be installed via most popular package managers, and installers are available on the official website. The Rust Analyzer extension can be installed in Visual Studo Code via the built-in extension manager.</p>
+<h3 id="tips-and-tricks"><a class="header" href="#tips-and-tricks">Tips and Tricks</a></h3>
+<p>If you are developing for a target which does not have <code>std</code> support Rust Analyzer can behave strangely, often reporting various errors. This can be resolved by creating a <code>.vscode/settings.json</code> file in your project and populating it with the following:</p>
+<pre><code class="language-json">{
+  &quot;rust-analyzer.checkOnSave.allTargets&quot;: false
+}
+</code></pre>
+<p>If you are using a custom toolchain, as you would with Xtensa targets, you can provide some hints to <code>cargo</code> via the <code>rust-toolchain.toml</code> file to improve the user experience:</p>
+<pre><code class="language-toml">[toolchain]
+channel = &quot;esp&quot;
+components = [&quot;rustfmt&quot;, &quot;rustc-dev&quot;]
+targets = [&quot;xtensa-esp32-none-elf&quot;]
+</code></pre>
+<h2 id="clion"><a class="header" href="#clion">CLion</a></h2>
+<p><a href="https://www.jetbrains.com/clion/">CLion</a> is a cross-platform IDE for C and C++ from <a href="https://www.jetbrains.com/">JetBrains</a>.</p>
+<h2 id="intellij"><a class="header" href="#intellij">IntelliJ</a></h2>
+<h2 id="vim"><a class="header" href="#vim">vim</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="espflash"><a class="header" href="#espflash">espflash</a></h1>
+<p>A serial flasher utility for ESP devices. Supports flashing <em>ESP32</em>, <em>ESP32-C3</em>, <em>ESP32-S2</em>, and <em>ESP8266</em>.</p>
+<p>The <a href="https://github.com/esp-rs/espflash">esp-rs/espflash</a> repository contains two crates, <code>cargo-espflash</code> and <code>espflash</code>. You can find more information on both of these in their respective sections below.</p>
+<h2 id="cargo-espflash"><a class="header" href="#cargo-espflash">cargo-espflash</a></h2>
+<p>Provides a subcommand for <code>cargo</code> which handles cross-compilation and flashing. Note that this requires the unstable <code>build-std</code> cargo feature; for more information on this please refer to <a href="https://doc.rust-lang.org/cargo/reference/unstable.html#build-std">the cargo documentation</a>.</p>
+<p>To install:</p>
+<pre><code class="language-bash">$ cargo install cargo-espflash
+</code></pre>
+<p>This command must be run within a Cargo project, ie.) a directory containing a <code>Cargo.toml</code> file. For example, to build an example named 'blinky' in <code>release</code> mode, flash the resulting binary to a device, and then subsequently start a serial monitor:</p>
+<pre><code class="language-bash">$ cargo espflash --release --monitor --example=blinky /dev/ttyUSB0
+</code></pre>
+<p>For more information please see to the <a href="https://github.com/esp-rs/espflash/blob/master/cargo-espflash/README.md">cargo-espflash README</a>.</p>
+<h2 id="espflash-1"><a class="header" href="#espflash-1">espflash</a></h2>
+<p>Provides a standalone command-line application which flashes an ELF file to a device.</p>
+<p>To install:</p>
+<pre><code class="language-bash">$ cargo install espflash
+</code></pre>
+<p>Assuming you have built an ELF binary by other means already, <code>espflash</code> can be used to download it to your device. For example, if you have built the <code>getting-started/blinky</code> example from <a href="https://github.com/espressif/esp-idf">esp-idf</a> using <code>idf.py</code> you might run something like:</p>
+<pre><code class="language-bash">$ espflash /dev/ttyUSB0 build/blinky
+</code></pre>
+<p>For more information please see to the <a href="https://github.com/esp-rs/espflash/blob/master/espflash/README.md">espflash README</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="espmonitor"><a class="header" href="#espmonitor">espmonitor</a></h1>
+<p>The <a href="https://github.com/esp-rs/espmonitor">esp-rs/espmonitor</a> repository contains two crates, <code>cargo-espmonitor</code> and <code>espmonitor</code>.</p>
+<h2 id="cargo-espmonitor"><a class="header" href="#cargo-espmonitor">cargo-espmonitor</a></h2>
+<pre><code class="language-bash">$ cargo install cargo-espmonitor
+</code></pre>
+<h2 id="espmonitor-1"><a class="header" href="#espmonitor-1">espmonitor</a></h2>
+<pre><code class="language-bash">$ cargo install espmonitor
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="debugging"><a class="header" href="#debugging">Debugging</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="probe-rs"><a class="header" href="#probe-rs">probe-rs</a></h1>
+<p>The probe-rs project is a set of tools to interact with embedded MCU's using various debug probes. It is similar to openOCD, PyOCD, Segger tools etc. There is support for ARM &amp; RISCV architectures along with a collection of tools, including but not limited to:</p>
+<ul>
+<li>Debugger
+<ul>
+<li>GDB support.</li>
+<li>CLI for interactive debugging.</li>
+<li>VSCode extension.</li>
+</ul>
+</li>
+<li>RTT (Real Time Transfer)
+<ul>
+<li>Similar to app_trace component of IDF.</li>
+</ul>
+</li>
+<li>Flashing algorithms</li>
+</ul>
+<p>More info about probe-rs &amp; how to set up a project, can be found on the <a href="https://probe.rs/">probe.rs</a> website.</p>
+<h2 id="usb-jtag-serial-peripheral-for-esp32-c3"><a class="header" href="#usb-jtag-serial-peripheral-for-esp32-c3"><code>USB-JTAG-SERIAL</code> peripheral for ESP32-C3</a></h2>
+<p>Starting from <code>probe-rs</code> v0.12, it is possible to flash and debug the ESP32-C3 with the builtin <code>USB-JTAG-SERIAL</code> peripheral, no need for any external hardware debugger. More info on configuring the interface can be found in the <a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/api-guides/jtag-debugging/configure-builtin-jtag.html">official documentation</a>.</p>
+<h2 id="support-for-espressif-chips"><a class="header" href="#support-for-espressif-chips">Support for Espressif chips</a></h2>
+<p><code>probe-rs</code> currently only supports ARM &amp; RISCV, therefore this limits the number of Espressif chips that can be used at the moment.</p>
+<table><thead><tr><th align="center">Chip</th><th align="center">Flashing</th><th align="center">Debugging</th></tr></thead><tbody>
+<tr><td align="center">ESP32-C3</td><td align="center">✅</td><td align="center">⚠️</td></tr>
+</tbody></table>
+<p><strong>Note</strong>: <em>items marked with ⚠️ are currently work in progress, usable but expect bugs.</em></p>
+<!-- TODO: when probe-rs can actually debug at least a C3 with decent back traces etc, add a section here with an example config: see https://github.com/probe-rs/probe-rs/issues/877 --><div style="break-before: page; page-break-before: always;"></div><h1 id="openocd"><a class="header" href="#openocd">OpenOCD</a></h1>
+<p>Similar to <a href="tooling/debugging/./probe-rs.html">probe-rs</a>, OpenOCD does not have support for the Xtensa architecture. However, Espressif does maintain a fork of OpenOCD under <a href="https://github.com/espressif/openocd-esp32">espressif/openocd-esp32</a> which has support for Espressif's chips.</p>
+<p>Instructions on how to install <code>openocd-esp32</code> for your platform can be found in <a href="https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/api-guides/jtag-debugging/index.html#setup-of-openocd">the Espressif documentation</a>.</p>
+<h2 id="setup-for-espressif-chips"><a class="header" href="#setup-for-espressif-chips">Setup for Espressif chips</a></h2>
+<!-- how to choose interface & chip -->
+<p>Once installed, it's as simple as running <code>openocd</code> with the correct scripts. For chips with the builtin USB JTAG, there is normally a config that will work out of the box, for example on the ESP32-C3:</p>
+<pre><code class="language-ignore">openocd -f board/esp32c3-builtin.cfg
+</code></pre>
+<p>For other configurations it may require specifying the chip and the interface separately, for example ESP32 with a J-Link:</p>
+<pre><code class="language-ignore">openocd -f interface/jlink.cfg -f target/esp32.cfg
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="appendix-a-glossary"><a class="header" href="#appendix-a-glossary">Appendix A: Glossary</a></h1>
+<p>A number of acronyms are used in the embedded development space. This glossary attempts to define any acronyms used in this book.</p>
+<h2 id="svd"><a class="header" href="#svd">SVD</a></h2>
+<p><strong>S</strong>ystem <strong>V</strong>iew <strong>D</strong>escription.</p>
+<p>The <a href="https://arm-software.github.io/CMSIS_5/SVD/html/index.html">CMSIS-SVD</a> specification formalizes the description of the system contained within a microcontroller. This specification was designed with ARM Cortex-M microcontrollers in mind, however it is still applicable to other architectures.</p>
+<p>SVD files are XML and contain definitions for peripherals which can be consumed by tools such a <a href="https://github.com/rust-embedded/svd2rust/">svd2rust</a> to generate Peripheral Access Crates.</p>
+<h2 id="pac"><a class="header" href="#pac">PAC</a></h2>
+<p><strong>P</strong>eripheral <strong>A</strong>ccess <strong>C</strong>rate.</p>
+<p>Provides a type-safe, low-level API for interacting with the device's hardware peripherals. For more information on the generated API please refer to the <a href="https://github.com/rust-embedded/svd2rust/">svd2rust</a> documentation.</p>
+<h2 id="hal"><a class="header" href="#hal">HAL</a></h2>
+<p><strong>H</strong>ardware <strong>A</strong>bstraction <strong>L</strong>ayer.</p>
+<p>Provides higher-level abstractions over hardware peripherals which are more easily used by developers. These libraries are generally implemented on top of Peripheral Access Crates, and often implement the various traits provided by <a href="https://github.com/rust-embedded/embedded-hal">embedded-hal</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </body>
+</html>
